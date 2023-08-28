@@ -1,7 +1,3 @@
-//
-// Created by agtfs on 29/8/2023.
-//
-
 #ifndef THEMAZEPROJECT_MAZE_H
 #define THEMAZEPROJECT_MAZE_H
 
