@@ -15,9 +15,7 @@ private:
     int end_x;
     int end_y;
 
-    bool valid_correct_path(int x, int y, int direction);
-
-    bool valid_path_start(int x, int y);
+    bool valid_direction(int x, int y, int direction);
 
 public:
     Maze (int _rows, int _cols);
