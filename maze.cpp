@@ -46,21 +46,16 @@
         //generating a random exit located at the border of the maze
         if(rand()%2 == 0) {
             end_x = rand()%cols;
-            std::cout<< end_x << std::endl;
 
             if(end_x == 0 || end_x == cols-1) end_y = rand()%(rows-2) + 1;
             else end_y = rand()%2 * (rows-1);
-            std::cout<< end_y << std::endl;
         }
         else {
             end_y = rand()%rows;
-            std::cout<< end_y << std::endl;
 
             if(end_y == 0 || end_y == rows-1) end_x = rand()%(cols-2) + 1;
             else end_x = rand()%2 * (cols-1);
-            std::cout<< end_x << std::endl;
         }
-        std::cout << end_x << " " << end_y << std::endl << std::endl;
         matrix[end_x][end_y] = 1; //endpoint
 
 
@@ -104,7 +99,7 @@
 
 
         //generating random paths
-        int total_path_tiles = rand()%((rows-2)*(cols-2)/2); // the total numbers of tiles available for new paths
+        int total_path_tiles = rand() % ((rows-3)*(cols-3) - (rows-3)*(cols-3)/2 + 1) + (rows-3)*(cols-3)/2; // the total numbers of tiles available for new paths
 
         while(total_path_tiles > 0) {
             //random start
@@ -167,10 +162,11 @@
     std::ostream& operator<< (std::ostream& out,Maze& maze) {
         for(int j=0; j < maze.rows; ++j) {
             for(int i=0; i < maze.cols; ++i) {
-                if(maze.matrix[i][j] == 0) out << "# ";
-                else if(maze.matrix[i][j] == 1) out << "  ";
-                else if(maze.matrix[i][j] == 2) out << "s ";
+                if(maze.matrix[i][j] == 2) out << "s ";
                 else if(maze.matrix[i][j] == 3) out << "g ";
+                else if(i == 0 || i == maze.cols - 1 || j == 0 || j == maze.rows - 1) out << (char)219 << " ";
+                else if(maze.matrix[i][j] == 0) out << (char)177 << " ";
+                else if(maze.matrix[i][j] == 1) out << "  ";
                 else out << "? ";
             }
             out << '\n';
