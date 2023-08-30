@@ -28,7 +28,7 @@
     
     bool Maze::valid_path_start(int x, int y) {
         if(matrix[x][y] == 1 &&
-           ((x+1 < cols - 1 && matrix[x+1][y] == 0) || (x-1 > 0 && matrix[x-1][y] == 0) || (y+1 < cols - 1 && matrix[x][y+1] == 0) || (y-1 > 0 && matrix[x][y-1] == 0)) //at least one direction has a wall that can be turned into a new path
+           ((x+1 < cols - 1 && matrix[x+1][y] == 0) || (x-1 > 0 && matrix[x-1][y] == 0) || (y+1 < rows - 1 && matrix[x][y+1] == 0) || (y-1 > 0 && matrix[x][y-1] == 0)) //at least one direction has a wall that can be turned into a new path
                 ) return true;
         else return false;
     }
@@ -112,37 +112,45 @@
 
 
         //generating random paths
-        int path_num=4;
-        while(path_num>0) {
+        int total_path_tiles = rand()%((rows-2)*(cols-2)/2); // the total numbers of tiles available for new paths
+
+        while(total_path_tiles > 0) {
+            int path_tiles = rand()%((rows-3)*(cols-3)/2); // the number of tiles the currently generated path will have
+            total_path_tiles -= path_tiles;
+
             //random start from an existing path
             x=1;
             y=1;
             bool legal_start = false;
             while(!legal_start) {
-                int tmp=rand()%((rows-1)*(cols-1));
-                while(x < rand()%(cols-1) && y < rand()%(rows-1)) {
-                    for(int i=1; i < cols-1; ++i) { //initializing the table to be empty
-                        for(int j=1; j < rows-1; ++j) {
+                int iteration_length = rand()%((rows-1)*(cols-1));
+
+                while(iteration_length > 0) {
+                    for(int i = 1; i < cols-1; ++i) {
+                        for(int j = 1; j < rows-1; ++j) {
                             if(valid_path_start(i,j)) {
                                 x=i;
                                 y=j;
                                 legal_start = true;
                             }
-                            --tmp;
+
+                            if(--iteration_length == 0) { // if iteration_length == 0 then break out of the while loop
+                                i = cols - 1;
+                                break;
+                            }
+
                         }
                     }
-                    if(tmp==0) break;
+
 
                 }
             }
 
 
-
-            length = rand()%((rows-3)*(cols-3)/2);
             //move  0:down 1:up 2:right 3:left
             last_move = rand()%4;
 
-            while(length > 0) {
+            while(path_tiles > 0) {
                 move = rand()%5;
                 if(move==4) move = last_move; //straighter paths
 
@@ -152,7 +160,7 @@
                         if(y > rows - 3 || x == 0 || x == cols - 1) break; //out of bounds
                         if((x-1 > 0 && matrix[x-1][y] == 1 && matrix[x-1][y+1] == 1) || (x+1 < cols -1 && matrix[x+1][y] == 1 || matrix[x+1][y+1] == 1)) break; //path formation
                         matrix[x][++y] = 1;
-                        --length;
+                        --path_tiles;
                         break;
 
                     case 1:
@@ -160,7 +168,7 @@
                         if(y < 2 || x == 0 || x == cols - 1) break;
                         if((x-1 > 0 && matrix[x-1][y] == 1 && matrix[x-1][y-1] == 1) || (x+1 < cols - 1 && matrix[x+1][y] == 1 || matrix[x+1][y-1] == 1)) break;
                         matrix[x][--y] = 1;
-                        --length;
+                        --path_tiles;
                         break;
 
                     case 2:
@@ -168,7 +176,7 @@
                         if(x > cols - 3 || y == 0 || y == rows - 1) break;
                         if((y-1 > 0 && matrix[x][y-1] == 1 && matrix[x+1][y-1] == 1) || (y+1 < rows - 1 && matrix[x][y+1] == 1 && matrix[x+1][y+1] == 1)) break;
                         matrix[++x][y] = 1;
-                        --length;
+                        --path_tiles;
                         break;
 
                     case 3:
@@ -176,7 +184,7 @@
                         if(x < 2 || y == 0 || y == rows - 1) break;
                         if((y-1 > 0 && matrix[x][y-1] == 1 && matrix[x-1][y-1] == 1) || (y+1 < cols - 1 && matrix[x][y+1] == 1 && matrix[x-1][y+1] == 1)) break;
                         matrix[--x][y] = 1;
-                        --length;
+                        --path_tiles;
                         break;
 
                 }
@@ -186,7 +194,7 @@
 
 
 
-            path_num--;
+
         }
 
 
