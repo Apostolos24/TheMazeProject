@@ -1,20 +1,20 @@
 #include "maze.h"
 
-    bool Maze::valid_correct_path(int x, int y, int direction) {
+    bool Maze::valid_direction(int x, int y, int direction) {
         switch(direction) {
-            case 0:
+            case 0: // up
                 if(y > 1 && x != 0 && x != cols - 1 && !(x-1 > 0 && matrix[x-1][y] == 1 && matrix[x-1][y-1] == 1) && !(x+1 < cols - 1 && matrix[x+1][y] == 1 || matrix[x+1][y-1] == 1)) return true;
                 else return false;
 
-            case 1:
+            case 1: // down
                 if(y < rows - 2 && x != 0 && x != cols - 1 && !(x-1 > 0 && matrix[x-1][y] == 1 && matrix[x-1][y+1] == 1) && !(x+1 < cols -1 && matrix[x+1][y] == 1 || matrix[x+1][y+1] == 1)) return true;
                 else return false;
 
-            case 2:
+            case 2: // right
                 if(x < cols - 2 && y != 0 && y != rows - 1 && !(y-1 > 0 && matrix[x][y-1] == 1 && matrix[x+1][y-1] == 1) && !(y+1 < rows - 1 && matrix[x][y+1] == 1 && matrix[x+1][y+1] == 1)) return true;
                 else return false;
 
-            case 3:
+            case 3: // left
                 if(x > 1 && y != 0 && y != rows - 1 && !(y-1 > 0 && matrix[x][y-1] == 1 && matrix[x-1][y-1] == 1) && !(y+1 < cols - 1 && matrix[x][y+1] == 1 && matrix[x-1][y+1] == 1)) return true;
                 else return false;
 
@@ -23,14 +23,6 @@
 
         }
 
-    }
-
-    
-    bool Maze::valid_path_start(int x, int y) {
-        if(matrix[x][y] == 1 &&
-           ((x+1 < cols - 1 && matrix[x+1][y] == 0) || (x-1 > 0 && matrix[x-1][y] == 0) || (y+1 < rows - 1 && matrix[x][y+1] == 0) || (y-1 > 0 && matrix[x][y-1] == 0)) //at least one direction has a wall that can be turned into a new path
-                ) return true;
-        else return false;
     }
 
     
@@ -83,7 +75,7 @@
             //picks a direction at random and then cycles through the direction until it finds a valid direction it can move to
             move = rand()%5;
             if(move==4) move = last_move; //straighter paths, 40% chance of continuing on the same direction
-            while(!valid_correct_path(x, y, move)) move = (++move)%4;
+            while(!valid_direction(x, y, move)) move = (++move)%4;
 
             switch(move) {
                 case 0: //up
@@ -115,84 +107,52 @@
         int total_path_tiles = rand()%((rows-2)*(cols-2)/2); // the total numbers of tiles available for new paths
 
         while(total_path_tiles > 0) {
-            int path_tiles = rand()%((rows-3)*(cols-3)/2); // the number of tiles the currently generated path will have
-            total_path_tiles -= path_tiles;
-
-            //random start from an existing path
-            x=1;
-            y=1;
-            bool legal_start = false;
-            while(!legal_start) {
-                int iteration_length = rand()%((rows-1)*(cols-1));
-
-                while(iteration_length > 0) {
-                    for(int i = 1; i < cols-1; ++i) {
-                        for(int j = 1; j < rows-1; ++j) {
-                            if(valid_path_start(i,j)) {
-                                x=i;
-                                y=j;
-                                legal_start = true;
-                            }
-
-                            if(--iteration_length == 0) { // if iteration_length == 0 then break out of the while loop
-                                i = cols - 1;
-                                break;
-                            }
-
-                        }
-                    }
-
-
-                }
-            }
-
+            //random start
+            x = rand()%(cols-2) + 1;
+            y = rand()%(rows-2) + 1;
+            int connected = false; //checks if the new path is connected with another path (ensuring that way that *almost* every tile can lead to the exit)
 
             //move  0:down 1:up 2:right 3:left
             last_move = rand()%4;
 
-            while(path_tiles > 0) {
+            while(!connected) {
+                //picks a direction at random and then cycles through the direction until it finds a valid direction it can move to
                 move = rand()%5;
-                if(move==4) move = last_move; //straighter paths
+                if(move==4) move = last_move; //straighter paths, 40% chance of continuing on the same direction
+
+                int cycles = 1;
+                while(!valid_direction(x, y, move) && cycles < 5) {
+                    move = (++move)%4;
+                    ++cycles;
+                }
+                if(cycles == 5) break; // if there is no valid direction available we try again with a new path
 
                 switch(move) {
-                    case 0:
-                        //if(matrix[x][y+1] == 1) break; //old path
-                        if(y > rows - 3 || x == 0 || x == cols - 1) break; //out of bounds
-                        if((x-1 > 0 && matrix[x-1][y] == 1 && matrix[x-1][y+1] == 1) || (x+1 < cols -1 && matrix[x+1][y] == 1 || matrix[x+1][y+1] == 1)) break; //path formation
-                        matrix[x][++y] = 1;
-                        --path_tiles;
+                    case 0: //up
+                        if(matrix[x][y-1] == 1) connected = true;
+                        else matrix[x][--y] = 1;
                         break;
 
-                    case 1:
-                        //if(matrix[x][y-1] == 1) break; //old path
-                        if(y < 2 || x == 0 || x == cols - 1) break;
-                        if((x-1 > 0 && matrix[x-1][y] == 1 && matrix[x-1][y-1] == 1) || (x+1 < cols - 1 && matrix[x+1][y] == 1 || matrix[x+1][y-1] == 1)) break;
-                        matrix[x][--y] = 1;
-                        --path_tiles;
+                    case 1: //down
+                        if(matrix[x][y+1] == 1) connected = true;
+                        else matrix[x][++y] = 1;
                         break;
 
-                    case 2:
-                        //if(matrix[x+1][y] == 1) break; //old path
-                        if(x > cols - 3 || y == 0 || y == rows - 1) break;
-                        if((y-1 > 0 && matrix[x][y-1] == 1 && matrix[x+1][y-1] == 1) || (y+1 < rows - 1 && matrix[x][y+1] == 1 && matrix[x+1][y+1] == 1)) break;
-                        matrix[++x][y] = 1;
-                        --path_tiles;
+                    case 2: //right
+                        if(matrix[x+1][y] == 1) connected = true;
+                        else matrix[++x][y] = 1;
                         break;
 
-                    case 3:
-                        //if(matrix[x-1][y] == 1) break; //old path
-                        if(x < 2 || y == 0 || y == rows - 1) break;
-                        if((y-1 > 0 && matrix[x][y-1] == 1 && matrix[x-1][y-1] == 1) || (y+1 < cols - 1 && matrix[x][y+1] == 1 && matrix[x-1][y+1] == 1)) break;
-                        matrix[--x][y] = 1;
-                        --path_tiles;
+                    case 3: //left
+                        if(matrix[x-1][y] == 1) connected = true;
+                        else matrix[--x][y] = 1;
                         break;
 
                 }
+                --total_path_tiles;
                 last_move = move;
 
             }
-
-
 
 
         }
