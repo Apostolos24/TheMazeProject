@@ -40,6 +40,27 @@
     }
 
 
+
+    int Maze::get_rows() {return rows;}
+    int Maze::get_cols() {return cols;}
+    int Maze::get_start_x() {return start_x;}
+    int Maze::get_start_y() {return start_y;}
+    int Maze::get_end_x() {return end_x;}
+    int Maze::get_end_y() {return end_y;}
+
+    int Maze::get_total_tiles() {
+        int total_tiles = 0;
+
+        for (int i = 0; i < cols; ++i) {
+            for (int j = 0; j < rows; ++j) {
+                if(matrix[i][j] == 1) ++total_tiles;
+            }
+        }
+
+        return total_tiles;
+    }
+
+
     void Maze::generate_random() {
         srand(time(0));
 
@@ -160,17 +181,15 @@
 
 
     std::ostream& operator<< (std::ostream& out,Maze& maze) {
-        for(int j=0; j < maze.rows; ++j) {
-            for(int i=0; i < maze.cols; ++i) {
-                if(maze.matrix[i][j] == 2) out << "s ";
-                else if(maze.matrix[i][j] == 3) out << "g ";
-                else if(i == 0 || i == maze.cols - 1 || j == 0 || j == maze.rows - 1) out << (char)219 << " ";
-                else if(maze.matrix[i][j] == 0) out << (char)177 << " ";
-                else if(maze.matrix[i][j] == 1) out << "  ";
+        for (int j = 0; j < maze.rows; ++j) {
+            for (int i = 0; i < maze.cols; ++i) {
+                if (maze.matrix[i][j] == 2) out << "s ";
+                else if (maze.matrix[i][j] == 3) out << "g ";
+                else if (i == 0 || i == maze.cols - 1 || j == 0 || j == maze.rows - 1) out << (char) 219 << " ";
+                else if (maze.matrix[i][j] == 0) out << (char) 177 << " ";
+                else if (maze.matrix[i][j] == 1) out << "  ";
                 else out << "? ";
             }
             out << '\n';
         }
-
-        return out;
     }
