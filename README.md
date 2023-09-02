@@ -13,5 +13,13 @@ For now and the near future this project will be entirely in the terminal. This 
 Another goal is the ability to see real time the algorithms running and seeing wich paths they choose and what decisions they make. The idea is that a person will be able to execute the algorithm move by move and see it traverse the maze, that way gaining a better understanding of how these algorithms operate and in a more fun way.
 In the (very) distant future I might also try to take the data collected from all the algorithms and proccess them with Python as to gain better experience and build on to my (admittedly limited to theory) Data Science knowledge.
 
-## How far have you gotten? / How much you have left?
-- Maze Generator 
+## How far have you gotten? / How much do you have left?
+- Maze Generator ![](https://geps.dev/progress/85)
+  
+- BFS ![](https://geps.dev/progress/0)
+
+- DFS ![](https://geps.dev/progress/0)
+
+- And more...
+
+##
