@@ -25,4 +25,3 @@ In the (very) distant future I might also try to take the data collected from al
 ## Contributions
 As I've stated before this is a learning project so any contribution is welcome. Any critics of my code are more than welcome, as I try to get better at developing with C++.
 If you are interested you can contact me or just make any adjustments you see fit and send in a pull request :) 
-Thanks!
