@@ -15,26 +15,24 @@ private:
     int end_x;
     int end_y;
 
-    bool valid_direction(int x, int y, int direction);
+    bool valid_direction(int x, int y, int direction)  const;
 
 public:
     Maze (int _rows, int _cols);
 
     // getters
-    int get_rows();
-    int get_cols();
-    int get_start_x();
-    int get_start_y();
-    int get_end_x();
-    int get_end_y();
-    int get_total_tiles();
+    int get_rows() const;
+    int get_cols() const;
+    int get_start_x() const;
+    int get_start_y() const;
+    int get_end_x() const;
+    int get_end_y() const;
+    int get_total_tiles() const;
     //
 
     void generate_random();
 
     friend std::ostream& operator<< (std::ostream& out,Maze& maze);
-
-    void print();
 
     };
 
