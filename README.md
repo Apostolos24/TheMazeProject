@@ -14,7 +14,7 @@ Another goal is the ability to see real time the algorithms running and seeing w
 In the (very) distant future I might also try to take the data collected from all the algorithms and proccess them with Python as to gain better experience and build on to my (admittedly limited to theory) Data Science knowledge.
 
 ## How far have you gotten? / How much do you have left?
-- Maze Generator ![](https://geps.dev/progress/85)
+- Maze Generator ![](https://geps.dev/progress/90)
   
 - BFS ![](https://geps.dev/progress/0)
 
