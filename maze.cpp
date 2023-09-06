@@ -179,6 +179,7 @@
         matrix[end_x][end_y] = 3; // endpoint
     }
 
+    //TODO: Implement a system so that if it gets stuck somewhere (a certain amount of time passed) it starts the generation from the start
 
     std::ostream& operator<< (std::ostream& out,Maze& maze) {
         for (int j = 0; j < maze.rows; ++j) {
