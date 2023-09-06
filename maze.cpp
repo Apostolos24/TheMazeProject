@@ -1,6 +1,6 @@
 #include "maze.h"
 
-    bool Maze::valid_direction(int x, int y, int direction) {
+    bool Maze::valid_direction(int x, int y, int direction)  const{
         switch(direction) {
             case 0: // up
                 if(y > 1 && x != 0 && x != cols - 1 && !(x-1 > 0 && matrix[x-1][y] == 1 && matrix[x-1][y-1] == 1) && !(x+1 < cols - 1 && matrix[x+1][y] == 1 || matrix[x+1][y-1] == 1)) return true;
@@ -41,14 +41,14 @@
 
 
 
-    int Maze::get_rows() {return rows;}
-    int Maze::get_cols() {return cols;}
-    int Maze::get_start_x() {return start_x;}
-    int Maze::get_start_y() {return start_y;}
-    int Maze::get_end_x() {return end_x;}
-    int Maze::get_end_y() {return end_y;}
+    int Maze::get_rows() const {return rows;}
+    int Maze::get_cols() const {return cols;}
+    int Maze::get_start_x()  const {return start_x;}
+    int Maze::get_start_y() const {return start_y;}
+    int Maze::get_end_x() const {return end_x;}
+    int Maze::get_end_y() const {return end_y;}
 
-    int Maze::get_total_tiles() {
+    int Maze::get_total_tiles() const {
         int total_tiles = 0;
 
         for (int i = 0; i < cols; ++i) {
@@ -192,4 +192,6 @@
             }
             out << '\n';
         }
+
+        return out;
     }
